@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 @Setter
 @Getter
-public class ThreadPoolFactoryUtil {
+public class CustomThreadPoolConfig {
     /**
      * 线程池默认参数
      */
