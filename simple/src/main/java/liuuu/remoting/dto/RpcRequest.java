@@ -23,7 +23,7 @@ public class RpcRequest implements Serializable {
     private String group;
     //  private RpcMessageType rpcMessageType;
 
-    private String getRpcServiceName(){
+    public String getRpcServiceName() {
         return this.getInterfaceName() + this.getGroup() + this.getVersion();
     }
 }
