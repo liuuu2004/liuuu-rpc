@@ -3,10 +3,14 @@ package liuuu.registry.zk.util;
 import liuuu.enums.RpcConfigEnum;
 import liuuu.utils.PropertiesFileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
+import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 
 import java.net.InetSocketAddress;
@@ -15,6 +19,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class CuratorUtils {
@@ -88,11 +93,36 @@ public class CuratorUtils {
         log.info("cleared all registered services.");
     }
 
+    /**
+     * 获取zk客户
+     * @return
+     */
     public static CuratorFramework getZkClient() {
         // 检测用户是否有zk地址
         Properties properties = PropertiesFileUtil.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getValue());
         String zookeeperAddress = properties != null &&properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getValue()) != null
                 ? properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getValue()) : DEFAULT_ZOOKEEPER_ADDRESS;
+
+        // 若已经开启，则直接返回
+        if (zkClient != null && zkClient.getState() == CuratorFrameworkState.STARTED) {
+            return zkClient;
+        }
+
+        // 重试三次
+        RetryPolicy retryPolicy = new ExponentialBackoffRetry(BASE_SLEEP_TIME, MAX_RETRIES);
+        zkClient = CuratorFrameworkFactory.builder()
+                .connectString(zookeeperAddress)
+                .retryPolicy(retryPolicy)
+                .build();
+        zkClient.start();
+        try {
+            if (!zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
+                throw new RuntimeException("等待时间过长");
+            }
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
+        return zkClient;
     }
 
     private static void registerWatcher(String rpcServiceName, CuratorFramework zkClient) throws Exception {
