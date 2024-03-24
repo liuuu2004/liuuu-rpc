@@ -13,9 +13,10 @@ import liuuu.remoting.dto.RpcMessage;
 import liuuu.remoting.dto.RpcRequest;
 import liuuu.remoting.dto.RpcResponse;
 import liuuu.serialize.Serializer;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-
+@SneakyThrows
 @Slf4j
 public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
     public RpcMessageDecoder() {
@@ -92,5 +93,23 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
             }
         }
         return rpcMessage;
+    }
+
+    private void checkMagicNumber(ByteBuf frame) {
+        int len = RpcConstants.MAGIC_NUMBER.length;
+        byte[] temp = new byte[len];
+        frame.readBytes(temp);
+        for (int i = 0; i < len; i++) {
+            if (temp[i] != RpcConstants.MAGIC_NUMBER[i]) {
+                throw new IllegalArgumentException("magic number类型未知");
+            }
+        }
+    }
+
+    private void checkVersion(ByteBuf frame) {
+        byte version = frame.readByte();
+        if (version != RpcConstants.VERSION) {
+            throw new RuntimeException("版本不适配");
+        }
     }
 }
