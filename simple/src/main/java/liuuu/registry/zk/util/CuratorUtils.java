@@ -1,12 +1,15 @@
 package liuuu.registry.zk.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.zookeeper.CreateMode;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class CuratorUtils {
     private static final int BASE_SLEEP_TIME = 1000;
     private static final int MAX_RETRIES = 3;
@@ -18,4 +21,17 @@ public class CuratorUtils {
 
     private CuratorUtils(){};
 
+    public static void createPersistentNode(CuratorFramework zkClient, String path) {
+        try {
+            if (REGISTERED_PATH_SET.contains(path) || zkClient.checkExists().forPath(path) != null) {
+                log.info("Node [{}] already exists.", path);
+            }
+            else {
+                zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 }
