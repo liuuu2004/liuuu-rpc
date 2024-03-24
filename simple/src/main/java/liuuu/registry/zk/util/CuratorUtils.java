@@ -23,9 +23,10 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class CuratorUtils {
+    //public static final String ZK_REGISTRY_ROOT_PATH = ;
     private static final int BASE_SLEEP_TIME = 1000;
     private static final int MAX_RETRIES = 3;
-    private static final String ZK_REGISTRY_ROOT_PATH = "/my-rpc";
+    public static final String ZK_REGISTRY_ROOT_PATH = "/my-rpc";
     private static final Map<String, List<String>> SERVICE_ADDRESS_MAP = new ConcurrentHashMap<>();
     private static final Set<String> REGISTERED_PATH_SET = ConcurrentHashMap.newKeySet();
     private static CuratorFramework zkClient;
