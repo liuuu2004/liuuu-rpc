@@ -13,10 +13,8 @@ import liuuu.remoting.dto.RpcMessage;
 import liuuu.remoting.dto.RpcRequest;
 import liuuu.remoting.dto.RpcResponse;
 import liuuu.serialize.Serializer;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-@SneakyThrows
 @Slf4j
 public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
     public RpcMessageDecoder() {
