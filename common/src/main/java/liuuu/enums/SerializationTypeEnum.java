@@ -1,7 +1,5 @@
 package liuuu.enums;
 
-
-import liuuu.registry.ServiceDiscovery;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum SerializationTypeEnum {
 
-    KYRO((byte)0x01, "kyro"),
+    KRYO((byte)0x01, "kyro"),
     PROTOSTUFF((byte)0x02, "protostuff"),
     HESSIAN((byte)0x03, "hessian");
 

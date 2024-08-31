@@ -1,0 +1,3 @@
+kryo=liuuu.serialize.kyro.KryoSerializer
+protostuff=liuuu.serialize.protostuff.ProtostuffSerializer
+hessian=liuuu.serialize.hessian.HessianSerializer

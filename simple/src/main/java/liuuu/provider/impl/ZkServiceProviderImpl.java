@@ -7,8 +7,9 @@ import liuuu.enums.ServiceRegistryEnum;
 import liuuu.exception.RpcException;
 import liuuu.extension.ExtensionLoader;
 import liuuu.provider.ServiceProvider;
+import liuuu.registry.ServiceRegistry;
+import liuuu.remoting.transport.netty.server.NettyRpcServer;
 
-import javax.imageio.spi.ServiceRegistry;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -24,12 +25,12 @@ public class ZkServiceProviderImpl implements ServiceProvider {
      */
     private final Map<String, Object> serviceMap;
     private final Set<String> registeredService;
-    private final ServiceRegistry serviceRegistry;
+    private final liuuu.registry.ServiceRegistry serviceRegistry;
 
     public ZkServiceProviderImpl() {
         serviceMap = new ConcurrentHashMap<>();
         registeredService = ConcurrentHashMap.newKeySet();
-        serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension(ServiceRegistryEnum.ZK.getName());serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension(ServiceRegistryEnum.ZK.getName());
+        serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension(ServiceRegistryEnum.ZK.getName());
     }
 
     @Override
@@ -55,8 +56,8 @@ public class ZkServiceProviderImpl implements ServiceProvider {
     public void publishService(RpcServiceConfig rpcServiceConfig) {
         try {
             String host = InetAddress.getLocalHost().getHostAddress();
-            this.addService(rpcServiceConfig);;
-            serviceRegistry.registerService(rpcServiceConfig.getRpcServiceName(), new InetSocketAddress(host, NettyRpcServer.PORT));
+            this.addService(rpcServiceConfig);
+            serviceRegistry.registryService(rpcServiceConfig.getRpcServiceName(), new InetSocketAddress(host, NettyRpcServer.PORT));
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }

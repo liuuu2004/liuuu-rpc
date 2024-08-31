@@ -1,6 +1,5 @@
 package liuuu.remoting.transport.socket;
 
-import jdk.internal.module.ServicesCatalog;
 import liuuu.config.CustomShutdownHook;
 import liuuu.config.RpcServiceConfig;
 import liuuu.factory.SingletonFactory;
@@ -9,7 +8,6 @@ import liuuu.provider.impl.ZkServiceProviderImpl;
 import liuuu.utils.concurrent.threadpool.ThreadPoolFactoryUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.sound.sampled.Port;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -34,7 +32,7 @@ public class SocketRpcServer {
         serviceProvider.publishService(rpcServiceConfig);
     }
 
-    public void start() throws IOException {
+    public void start() {
         try (ServerSocket server = new ServerSocket()) {
             String host = InetAddress.getLocalHost().getHostAddress();
             server.bind(new InetSocketAddress(host, PORT));

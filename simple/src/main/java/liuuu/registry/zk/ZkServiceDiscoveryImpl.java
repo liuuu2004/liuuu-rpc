@@ -24,7 +24,7 @@ public class ZkServiceDiscoveryImpl implements ServiceDiscovery {
 
     private final LoadBalance loadBalance;
 
-    public ZkServiceDiscoveryImpl(LoadBalance loadBalance) {
+    public ZkServiceDiscoveryImpl() {
         this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(LoadBalanceEnum.LOAD_BALANCE.getName());
     }
 

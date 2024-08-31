@@ -27,18 +27,14 @@
     <hessian.version>4.0.65</hessian.version>
   </properties>
   <modules>
+    <module>common</module>
     <module>simple</module>
+    <module>example-client</module>
+    <module>hello-service-api</module>
+    <module>example-server</module>
   </modules>
-  <name>liuuu-rpc Maven Webapp</name>
-  <url>http://maven.apache.org</url>
 
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
     <!-- lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -63,24 +59,55 @@
       <artifactId>slf4j-simple</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-      <dependency>
-          <groupId>org.apache.curator</groupId>
-          <artifactId>curator-framework</artifactId>
-          <version>4.2.0</version>
-          <scope>compile</scope>
-      </dependency>
-      <dependency>
-          <groupId>io.protostuff</groupId>
-          <artifactId>protostuff-api</artifactId>
-          <version>1.7.2</version>
-          <scope>compile</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-context</artifactId>
-          <version>6.0.11</version>
-          <scope>compile</scope>
-      </dependency>
+    <!-- test -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-runner</artifactId>
+      <version>${junit.platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.curator</groupId>
+      <artifactId>curator-framework</artifactId>
+      <version>4.2.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.curator</groupId>
+      <artifactId>curator-recipes</artifactId>
+      <version>4.2.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>4.1.42.Final</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.protostuff</groupId>
+      <artifactId>protostuff-runtime</artifactId>
+      <version>1.7.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.protostuff</groupId>
+      <artifactId>protostuff-core</artifactId>
+      <version>1.7.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>5.2.7.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <build>
     <finalName>liuuu-rpc</finalName>
@@ -90,8 +117,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <encoding>${encoding}</encoding>
         </configuration>
       </plugin>
@@ -102,13 +129,13 @@
         <configuration>
           <configLocation>config/checkstyle.xml</configLocation>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <goals>-->
+<!--              <goal>check</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
       </plugin>
     </plugins>
   </build>

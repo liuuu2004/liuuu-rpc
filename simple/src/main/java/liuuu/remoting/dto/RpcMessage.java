@@ -5,8 +5,8 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
 @Builder
 @ToString
 public class RpcMessage {

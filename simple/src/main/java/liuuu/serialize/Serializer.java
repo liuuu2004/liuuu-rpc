@@ -11,7 +11,7 @@ public interface Serializer {
 
     /**
      * 要被序列化的对象
-     * @param object
+     * @param object  将要被转化成二进制数据流通过网络传输的对象
      * @return
      */
     byte[] serialize(Object object);
@@ -23,5 +23,6 @@ public interface Serializer {
      * @return
      * @param <T>
      */
-    <T> T deserializer(byte[] bytes, Class<T> clazz);
+    <T> T deserialize(byte[] bytes, Class<T> clazz);
+
 }

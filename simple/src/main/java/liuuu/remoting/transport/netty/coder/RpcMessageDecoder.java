@@ -3,7 +3,7 @@ package liuuu.remoting.transport.netty.coder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.protostuff.Rpc;
+
 import liuuu.compress.Compress;
 import liuuu.enums.CompressTypeEnum;
 import liuuu.enums.SerializationTypeEnum;
@@ -82,11 +82,11 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
             String deserializationName = SerializationTypeEnum.getName(rpcMessage.getSerializationType());
             Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(deserializationName);
             if (messageType == RpcConstants.REQUEST_TYPE) {
-                RpcRequest tempValue = serializer.deserializer(bs, RpcRequest.class);
+                RpcRequest tempValue = serializer.deserialize(bs, RpcRequest.class);
                 rpcMessage.setData(tempValue);
             }
             else {
-                RpcResponse tempValue = serializer.deserializer(bs, RpcResponse.class);
+                RpcResponse tempValue = serializer.deserialize(bs, RpcResponse.class);
                 rpcMessage.setData(tempValue);
             }
         }

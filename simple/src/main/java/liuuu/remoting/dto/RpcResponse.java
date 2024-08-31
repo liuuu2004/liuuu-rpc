@@ -50,20 +50,15 @@ public class RpcResponse<T> implements Serializable {
 
     /**
      * 远程调用失败
-     * @param data
-     * @param requestId
-     * @return
+     * @param rpcResponseCodeEnum
+     * @return rpcResponseCodeEnum
      * @param <T>
      */
-    public static <T> RpcResponse fail(T data, String requestId) {
+    public static <T> RpcResponse fail(RpcResponseCodeEnum rpcResponseCodeEnum) {
         // 设置返回值的各项参数
         RpcResponse<T> response = new RpcResponse<>();
-        response.setCode(RpcResponseCodeEnum.FAIL.getCode());
-        response.setMessage(RpcResponseCodeEnum.FAIL.getMessage());
-        response.setRequestId(requestId);
-        if (data != null) {
-            response.setData(data);
-        }
+        response.setCode(rpcResponseCodeEnum.getCode());
+        response.setMessage(rpcResponseCodeEnum.getMessage());
         return response;
     }
 }

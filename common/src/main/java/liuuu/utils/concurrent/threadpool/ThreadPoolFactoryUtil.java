@@ -12,7 +12,6 @@ public class ThreadPoolFactoryUtil {
     private static final Map<String, ExecutorService> THREAD_POOLS = new ConcurrentHashMap<>();
 
     public ThreadPoolFactoryUtil() {
-
     }
 
     public static ExecutorService createCustomThreadPoolIfAbsent(String threadNamePrefix) {
