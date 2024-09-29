@@ -12,7 +12,7 @@ public class ProtoStuffSerializer implements Serializer {
 
     @Override
     public byte[] serialize(Object object) {
-        Class<?> clazz =object.getClass();
+        Class<?> clazz = object.getClass();
         Schema schema = RuntimeSchema .getSchema(clazz);
         byte[] bytes;
         try {

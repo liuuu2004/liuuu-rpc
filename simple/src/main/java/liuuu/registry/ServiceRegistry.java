@@ -1,10 +1,13 @@
 package liuuu.registry;
 
+import liuuu.extension.SPI;
+
 import java.net.InetSocketAddress;
 
 /**
  * 服务注册
  */
+@SPI
 public interface ServiceRegistry {
 
     /**

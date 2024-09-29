@@ -39,14 +39,20 @@ public class ZkServiceDiscoveryImpl implements ServiceDiscovery {
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);
         if (CollectionUtil.isEmpty(serviceUrlList)) {
-            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND);
+            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);
         }
 
+        log.debug("---SERVICE URL LIST---");
+        for (String s : serviceUrlList) {
+            log.debug("---Service URL to be selected: [{}]---", s);
+        }
         // 负载均衡
         String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);
+        log.info("Successfully found the service address:[{}]", targetServiceUrl);
         String[] socketAddressArray = targetServiceUrl.split(":");
         String host = socketAddressArray[0];
         int port = Integer.parseInt(socketAddressArray[1]);
+//        port = 9998;//        host = "169.254.26.3";
         return new InetSocketAddress(host, port);
     }
 }

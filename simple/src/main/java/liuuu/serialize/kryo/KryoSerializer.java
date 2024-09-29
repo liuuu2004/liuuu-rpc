@@ -24,7 +24,7 @@ public class KryoSerializer implements Serializer {
     @Override
     public byte[] serialize(Object object) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-             Output output = new Output(byteArrayOutputStream)) {
+            Output output = new Output(byteArrayOutputStream)) {
             Kryo kryo = kryoThreadLocal.get();
             // Object->byte:将对象序列化为byte数组
             kryo.writeObject(output, object);

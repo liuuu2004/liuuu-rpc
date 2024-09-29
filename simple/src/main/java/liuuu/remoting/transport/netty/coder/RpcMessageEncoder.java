@@ -49,6 +49,7 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
             if (messageType != RpcConstants.HEARTBEAT_REQUEST_TYPE && messageType != RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
                 // 将消息体序列化
                 String serializedName = SerializationTypeEnum.getName(rpcMessage.getSerializationType());
+                log.info("Serialization name: [{}]", serializedName);
                 Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(serializedName);
                 bodyBytes = serializer.serialize(rpcMessage.getData());
 
@@ -62,12 +63,12 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
             if (bodyBytes != null) {
                 byteBuf.writeBytes(bodyBytes);
             }
-            int writeIndex =byteBuf.writerIndex();
+            int writeIndex = byteBuf.writerIndex();
             byteBuf.writerIndex(writeIndex - fullLength + RpcConstants.MAGIC_NUMBER.length + 1);
             byteBuf.writeInt(fullLength);
             byteBuf.writerIndex(writeIndex);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Encode request error!", e);
         }
     }
 }

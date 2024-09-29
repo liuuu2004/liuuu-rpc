@@ -28,6 +28,7 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
 
     @Override
     protected Object decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf) throws Exception {
+        log.info("Begin decoding...");
         Object decoded = super.decode(channelHandlerContext, byteBuf);
         if (decoded instanceof ByteBuf) {
             ByteBuf frame = (ByteBuf) decoded;
@@ -35,7 +36,8 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
                 try {
                     return decodeFrame(frame);
                 } catch (Exception e) {
-                    log.error(e.getMessage());
+                    log.error("Decode frame error!", e);
+                    throw e;
                 } finally {
                     frame.release();
                 }
@@ -80,6 +82,7 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
 
             // 将对象反序列化
             String deserializationName = SerializationTypeEnum.getName(rpcMessage.getSerializationType());
+            log.info("codec name: [{}] ", deserializationName);
             Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(deserializationName);
             if (messageType == RpcConstants.REQUEST_TYPE) {
                 RpcRequest tempValue = serializer.deserialize(bs, RpcRequest.class);

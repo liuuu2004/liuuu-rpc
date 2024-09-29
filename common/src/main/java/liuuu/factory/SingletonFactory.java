@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 获取单例对象的工厂类
  */
 public class SingletonFactory {
-    private static final Map<String, Object> OBJKECT_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, Object> OBJECT_MAP = new ConcurrentHashMap<>();
 
     private SingletonFactory() {
 
@@ -20,21 +20,21 @@ public class SingletonFactory {
             throw new IllegalArgumentException();
         }
         String key = c.toString();
-        if (OBJKECT_MAP.containsKey(key)) {
-            return c.cast(OBJKECT_MAP.get(key));
+        if (OBJECT_MAP.containsKey(key)) {
+            return c.cast(OBJECT_MAP.get(key));
         }
         else {
-            return c.cast(OBJKECT_MAP.computeIfAbsent(key, k -> {
+            return c.cast(OBJECT_MAP.computeIfAbsent(key, k -> {
                 try {
                     return c.getDeclaredConstructor().newInstance();
                 } catch (InvocationTargetException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e.getMessage(), e);
                 } catch (InstantiationException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e.getMessage(), e);
                 } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e.getMessage(), e);
                 } catch (NoSuchMethodException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e.getMessage(), e);
                 }
             }));
         }

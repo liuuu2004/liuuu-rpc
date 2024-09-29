@@ -14,6 +14,7 @@ import liuuu.remoting.transport.RpcRequestTransport;
 import lombok.SneakyThrows;
 import lombok.extern.apachecommons.CommonsLog;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
 
     public SpringBeanPostProcessor() {
         this.serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
-        this.rpcClient = ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension(RpcRequestTransportEnum.NETTY.name());
+        this.rpcClient = ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension(RpcRequestTransportEnum.NETTY.getProtocol());
     }
 
 
@@ -43,6 +44,7 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         if (bean.getClass() .isAnnotationPresent(RpcService.class)) {
+            log.info("[{}] is annotated with [{}]", bean.getClass().getName(), RpcService.class.getCanonicalName());
             RpcService rpcService = bean.getClass().getAnnotation(RpcService.class);
             RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder()
                     .group(rpcService.group())
@@ -54,8 +56,8 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
         return bean;
     }
 
-
-    public Object PostProcessAfterInitialization(Object bean, String beanName) {
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         Class<?> targetClass = bean.getClass();
         Field[] declaredFields = targetClass.getDeclaredFields();
         for (Field declaredField : declaredFields) {

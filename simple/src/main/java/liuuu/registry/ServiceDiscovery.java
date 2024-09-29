@@ -1,5 +1,6 @@
 package liuuu.registry;
 
+import liuuu.extension.SPI;
 import liuuu.remoting.dto.RpcRequest;
 
 import java.net.InetSocketAddress;
@@ -8,6 +9,7 @@ import java.net.InetSocketAddress;
 /**
  * 查找服务
  */
+@SPI
 public interface ServiceDiscovery {
 
     /**

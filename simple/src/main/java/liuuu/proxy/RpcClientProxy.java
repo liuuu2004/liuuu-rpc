@@ -1,6 +1,5 @@
 package liuuu.proxy;
 
-import io.protostuff.Rpc;
 import liuuu.config.RpcServiceConfig;
 import liuuu.enums.RpcErrorMessageEnum;
 import liuuu.enums.RpcResponseCodeEnum;
@@ -8,6 +7,7 @@ import liuuu.exception.RpcException;
 import liuuu.remoting.dto.RpcRequest;
 import liuuu.remoting.dto.RpcResponse;
 import liuuu.remoting.transport.RpcRequestTransport;
+import liuuu.remoting.transport.netty.client.NettyRpcClient;
 import liuuu.remoting.transport.netty.server.NettyRpcServer;
 import liuuu.remoting.transport.socket.SocketRpcClient;
 import lombok.SneakyThrows;
@@ -17,13 +17,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 
 @Slf4j
 public class RpcClientProxy implements InvocationHandler {
 
     private static final String INTERFACE_NAME = "interfaceName";
-
     private final RpcRequestTransport rpcRequestTransport;
     private final RpcServiceConfig rpcServiceConfig;
 
@@ -67,6 +67,7 @@ public class RpcClientProxy implements InvocationHandler {
     @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
+        log.info("invoked method: [{}]", method.getName());
         RpcRequest rpcRequest = RpcRequest.builder()
                 .methodName(method.getName())
                 .parameters(args)
@@ -80,11 +81,15 @@ public class RpcClientProxy implements InvocationHandler {
         if (rpcRequestTransport instanceof SocketRpcClient) {
             rpcResponse = (RpcResponse<Object>) rpcRequestTransport.sendRpcRequest(rpcRequest);
         }
+        if (rpcRequestTransport instanceof NettyRpcClient) {
+            CompletableFuture<RpcResponse<Object>> completableFuture = (CompletableFuture<RpcResponse<Object>>) rpcRequestTransport.sendRpcRequest(rpcRequest);
+            rpcResponse = completableFuture.get();
+        }
         this.check(rpcResponse, rpcRequest);
         return rpcResponse.getData();
     }
 
-    private void check(RpcResponse rpcResponse, RpcRequest rpcRequest) {
+    private void check(RpcResponse<Object> rpcResponse, RpcRequest rpcRequest) {
 
         // 无响应
         if (rpcResponse == null) {
@@ -97,7 +102,7 @@ public class RpcClientProxy implements InvocationHandler {
         }
 
         // 无响应码或响应码表示不成功
-        if (rpcResponse.getCode() == null || !rpcResponse.getCode().equals(RpcResponseCodeEnum.SUCCESS)) {
+        if (rpcResponse.getCode() == null || !rpcResponse.getCode().equals(RpcResponseCodeEnum.SUCCESS.getCode())) {
             throw new RpcException(RpcErrorMessageEnum.SERVER_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
         }
     }

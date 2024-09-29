@@ -23,7 +23,7 @@ import static java.rmi.server.LogStream.log;
 
 @Slf4j
 public final class ExtensionLoader<T> {
-    private static final String SERVICE_DICTIONARY = "META-INF/extensions/";
+    private static final String SERVICE_DICTIONARY = "META_INF/extensions/";
     private static final Map<Class<?>, ExtensionLoader<?>> EXTENSION_LOADERS = new ConcurrentHashMap<>();
     private static final Map<Class<?>, Object> EXTENSION_INSTANCES = new ConcurrentHashMap<>();
     private final Class<?> type;
@@ -71,7 +71,7 @@ public final class ExtensionLoader<T> {
             throw new IllegalArgumentException("Extension name should not be null or empty");
         }
         // 首先尝试从cache中获取
-        Holder<Object> holder = (Holder<Object>) EXTENSION_INSTANCES.get(name);
+        Holder<Object> holder = cachedInstances.get(name);
 
         // 若不存在则创建一个满足条件的
         if (holder == null) {
@@ -108,6 +108,7 @@ public final class ExtensionLoader<T> {
         if (instance == null) {
             try {
                 EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.newInstance());
+                instance = (T) EXTENSION_INSTANCES.get(clazz);
             } catch (InstantiationException e) {
                 log(e.getMessage());
             } catch (IllegalAccessException e) {

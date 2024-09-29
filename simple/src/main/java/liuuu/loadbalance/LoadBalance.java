@@ -18,6 +18,6 @@ public interface LoadBalance {
      * @param serviceUrlList  服务地址列表
      * @param rpcRequest  Rpc服务请求(待处理对象)
      * @return
-     */
-    String selectServiceAddress(List<String> serviceUrlList, RpcRequest rpcRequest);
+     */    String selectServiceAddress(List<String> serviceUrlList, RpcRequest rpcRequest);
+
 }

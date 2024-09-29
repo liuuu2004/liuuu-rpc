@@ -2,11 +2,11 @@ package liuuu.utils;
 
 public class StringUtil {
     public static boolean isBlank(String s) {
-        if (s == null || s.equals("")) {
-            return false;
+        if (s == null || s.length() == 0) {
+            return true;
         }
-        for (char c : s.toCharArray()) {
-            if (!Character.isWhitespace(c)) {
+        for (int i = 0; i < s.length(); ++i) {
+            if (!Character.isWhitespace(s.charAt(i))) {
                 return false;
             }
         }

@@ -1,6 +1,7 @@
 package liuuu.config;
 
 
+import liuuu.registry.zk.util.CuratorUtils;
 import liuuu.remoting.transport.netty.server.NettyRpcServer;
 import liuuu.utils.concurrent.threadpool.ThreadPoolFactoryUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class CustomShutdownHook {
         Runtime.getRuntime().addShutdownHook(new Thread( ()-> {
             try {
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), NettyRpcServer.PORT);
+                CuratorUtils.clearRegistry(CuratorUtils.getZkClient(), inetSocketAddress);
             } catch (UnknownHostException e) {
                 throw new RuntimeException(e);
             }

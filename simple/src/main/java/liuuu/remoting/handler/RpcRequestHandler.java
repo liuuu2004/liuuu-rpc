@@ -23,9 +23,9 @@ public class RpcRequestHandler {
     private Object invokeTargetMethod(RpcRequest rpcRequest, Object service) {
         Object result;
         try {
-            Method method = service.getClass().getMethod(rpcRequest.getMethodName(), Class.forName(rpcRequest.getRequestId()));
+            Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
             result = method.invoke(service, rpcRequest.getParameters());
-        } catch (ClassNotFoundException e) {
+        } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);

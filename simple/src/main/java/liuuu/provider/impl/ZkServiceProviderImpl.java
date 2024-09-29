@@ -9,6 +9,7 @@ import liuuu.extension.ExtensionLoader;
 import liuuu.provider.ServiceProvider;
 import liuuu.registry.ServiceRegistry;
 import liuuu.remoting.transport.netty.server.NettyRpcServer;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class ZkServiceProviderImpl implements ServiceProvider {
     /**
      * key: rpc服务名，包含接口名、版本号、团体名
@@ -25,7 +27,7 @@ public class ZkServiceProviderImpl implements ServiceProvider {
      */
     private final Map<String, Object> serviceMap;
     private final Set<String> registeredService;
-    private final liuuu.registry.ServiceRegistry serviceRegistry;
+    private final ServiceRegistry serviceRegistry;
 
     public ZkServiceProviderImpl() {
         serviceMap = new ConcurrentHashMap<>();
@@ -50,6 +52,7 @@ public class ZkServiceProviderImpl implements ServiceProvider {
         }
         registeredService.add(rpcServiceName);
         serviceMap.put(rpcServiceName, rpcServiceConfig.getService());
+        log.info("Add service: {} and interfaces: {}", rpcServiceName, rpcServiceConfig.getService().getClass().getInterfaces());
     }
 
     @Override
