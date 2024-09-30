@@ -41,7 +41,7 @@ public class NettyRpcServerHandler extends ChannelInboundHandlerAdapter {
                     RpcRequest rpcRequest = (RpcRequest) ((RpcMessage) msg).getData();
                     // Execute the target method (the method the client needs to execute) and return the method result
                     Object result = rpcRequestHandler.handle(rpcRequest);
-                    log.info(String.format("server get result: %s", result.toString()));
+//                    log.info(String.format("server get result: %s", result.toString()));
                     rpcMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
                     if (ctx.channel().isActive() && ctx.channel().isWritable()) {
                         RpcResponse<Object> rpcResponse = RpcResponse.success(result, rpcRequest.getRequestId());
